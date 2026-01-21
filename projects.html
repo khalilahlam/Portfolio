@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectos | Khalil Ahlam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      padding: 2rem 1rem;
+    }
+    h1 {
+      text-align: center;
+      color: var(--color-primario);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin: 3rem 0 1rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+      color: var(--color-primario);
+      transition: var(--transition);
+    }
+    .back-link:hover {
+      color: var(--color-texto-suave);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Mis Proyectos</h1>
+
+<div class="proyectos">
+
+  <!-- Proyecto 1 -->
+  <div class="proyecto-card">
+    <img src="pong.png" alt="Juego Pong">
+    <div class="contenido">
+      <h3>Juego Pong</h3>
+      <p>Videojuego clásico desarrollado con JavaScript. Control por teclado, colisiones, marcador y lógica de juego.</p>
+      <a href="pong/index.html" target="_blank">Ver proyecto</a>
+    </div>
+  </div>
+
+  <!-- Proyecto 2 -->
+  <div class="proyecto-card">
+    <img src="numble.png" alt="Juego Wordle">
+    <div class="contenido">
+      <h3>Juego Numble</h3>
+      <p>Juego de palabras inspirado en Wordle. Incluye validación de letras, intentos limitados y feedback visual.</p>
+      <a href="wordle/index.html" target="_blank">Ver proyecto</a>
+    </div>
+  </div>
+
+  <!-- Proyecto 3 -->
+  <div class="proyecto-card">
+    <img src="ASCII.png" alt="Convertidor ASCII">
+    <div class="contenido">
+      <h3>Convertidor ASCII</h3>
+      <p>Convierte texto a código ASCII y viceversa. Ideal para aprender codificación de caracteres.</p>
+      <a href="ASCII/index.html" target="_blank">Ver proyecto</a>
+    </div>
+  </div>
+
+  
+
+</div>
+
+<a href="index.html" class="back-link">← Volver al Portfolio</a>
+
+</body>
+</html>
