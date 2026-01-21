@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+body {
+    overflow: hidden;
+    background-color: black;
+}
+
+#paddle, #paddle2 {
+    width: 40px;
+    height: 150px;
+    position: absolute;
+}
+
+#paddle { left: 50px; top: calc(50% - 75px); background-color: #eb01eb; }
+#paddle2 { right: 50px; top: calc(50% - 75px); background-color: #f700ff; }
+
+#ball {
+    position: absolute;
+    top: calc(50%);
+    left: calc(50%);
+    background-color: #ffee02;
+}
+
+#salir, button {
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px solid yellow;
+    transition: 0.3s;
+}
+
+#salir {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #f700ff;
+    color: yellow;
+}
+
+#salir:hover { background-color: yellow; color: #f700ff; }
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #f700ff;
+    color: yellow;
+}
+
+#toggleMusic {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+#nombres {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #ffea00;
+    font-family: "'Press Start 2P', monospace";
+    font-size: 32px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px #ff00ff;
+}
+
+#scoreboard {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 30px;
+    background-color: rgba(0,0,0,0.6);
+    border: 3px solid #ff00ff;
+    border-radius: 15px;
+    color: #00ffff;
+    font-family: "'Press Start 2P', monospace";
+    font-size: 28px;
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+/* Mensaje de ganador */
+#winnerMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "'Press Start 2P', monospace";
+    font-size: 40px;
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+    background-color: rgba(0,0,0,0.8);
+    padding: 30px 50px;
+    border: 4px solid #ff00ff;
+    border-radius: 20px;
+    display: none; /* oculto por defecto */
+    z-index: 9999;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<div id="nombres"></div>
+<div id="scoreboard">0 - 0</div>
+<div id="winnerMessage"></div>
+
+<button id="salir">Salir</button>
+<div id="paddle"><!-- paddle --></div>
+<div id="paddle2"><!-- paddle --></div>
+<div id="ball"><!-- ball --></div>
+<audio id="musica" src="pong-pong-193380.mp3" loop></audio>
+<button id="toggleMusic">🔊 Música</button>
+
+<script>
+// Leer nombres de localStorage
+const nombre1 = localStorage.getItem("jugador1") || "Jugador 1";
+const nombre2 = localStorage.getItem("jugador2") || "Jugador 2";
+
+const nombres = document.getElementById("nombres");
+const scoreboard = document.getElementById("scoreboard");
+const winnerMessage = document.getElementById("winnerMessage");
+nombres.innerHTML = `${nombre1} vs ${nombre2}`;
+
+const paddle = document.getElementById("paddle");
+const paddle2 = document.getElementById("paddle2");
+const ball = document.getElementById("ball");
+
+const ball_radius = window.prompt("Introduce el radio de la bola") || 10;
+ball.style.width = 2*ball_radius + "px";
+ball.style.height = 2*ball_radius + "px";
+ball.style.borderRadius = ball_radius + "px";
+
+let velocity_x = 15;
+let velocity_y = -15;
+
+// MOVIMIENTO SUAVE DE PADDLES
+const keys = {};
+document.addEventListener("keydown", (e) => { keys[e.key] = true; });
+document.addEventListener("keyup", (e) => { keys[e.key] = false; });
+
+function updatePaddles() {
+    const paddleSpeed = 5;
+    if (keys["w"] || keys["W"]) paddle.style.top = Math.max(paddle.offsetTop - paddleSpeed, 0) + "px";
+    if (keys["s"] || keys["S"]) paddle.style.top = Math.min(paddle.offsetTop + paddleSpeed, window.innerHeight - paddle.offsetHeight) + "px";
+    if (keys["ArrowUp"]) paddle2.style.top = Math.max(paddle2.offsetTop - paddleSpeed, 0) + "px";
+    if (keys["ArrowDown"]) paddle2.style.top = Math.min(paddle2.offsetTop + paddleSpeed, window.innerHeight - paddle2.offsetHeight) + "px";
+    requestAnimationFrame(updatePaddles);
+}
+updatePaddles();
+
+// SISTEMA DE PUNTUACIÓN
+let score1 = 0;
+let score2 = 0;
+function updateScoreboard() { scoreboard.innerHTML = `${score1} - ${score2}`; }
+
+// Mostrar mensaje de ganador
+function showWinner(winner) {
+    winnerMessage.innerHTML = `${winner} GANADOR!`;
+    winnerMessage.style.display = 'block';
+    // detener la bola
+    clearInterval(ball_movement);
+    velocity_x = 0;
+    velocity_y = 0;
+    // Opcional: reiniciar automáticamente después de 3 segundos
+    setTimeout(() => location.reload(), 3000);
+}
+
+// Movimiento de la bola
+var ball_movement = setInterval(move_ball, 25);
+function move_ball() {
+    if (ball.offsetTop <= 0 || ball.offsetTop >= (window.innerHeight - 2*ball_radius)) velocity_y = -velocity_y;
+
+    // Colisión paddle1
+    if (ball.offsetLeft <= 90 &&
+        (ball.offsetTop >= (paddle.offsetTop - ball_radius)) &&
+        (ball.offsetTop <= (paddle.offsetTop + 150 - ball_radius))) {
+        velocity_x = -velocity_x;
+        score1++;
+        updateScoreboard();
+    }
+
+    // Colisión paddle2
+    if (ball.offsetLeft + 2*ball_radius >= paddle2.offsetLeft &&
+        ball.offsetTop >= (paddle2.offsetTop - ball_radius) &&
+        ball.offsetTop <= (paddle2.offsetTop + paddle2.offsetHeight - ball_radius)) {
+        velocity_x = -velocity_x;
+        score2++;
+        updateScoreboard();
+    }
+
+    // Revisar límites
+    if (ball.offsetLeft <= 0) showWinner(nombre2);
+    if (ball.offsetLeft + 2*ball_radius >= window.innerWidth) showWinner(nombre1);
+
+    ball.style.top = (ball.offsetTop + velocity_y) + "px";
+    ball.style.left = (ball.offsetLeft + velocity_x) + "px";
+}
+
+// Botón salir
+document.getElementById("salir").onclick = () => { window.location.href = "salir.html"; };
+
+// Música
+const musica = document.getElementById("musica");
+const btn = document.getElementById("toggleMusic");
+let musicaActiva = localStorage.getItem("musica") !== "off";
+musica.volume = 0.3;
+if (musicaActiva) { musica.play().catch(()=>{}); btn.textContent = "🔊 Música"; } else { btn.textContent = "🔇 Música"; }
+btn.onclick = () => {
+    if (musica.paused) { musica.play(); localStorage.setItem("musica","on"); btn.textContent="🔊 Música"; }
+    else { musica.pause(); localStorage.setItem("musica","off"); btn.textContent="🔇 Música"; }
+};
+document.addEventListener("click", ()=>{ if(localStorage.getItem("musica")!=="off"){ musica.play().catch(()=>{}); }}, {once:true});
+</script>
+</body>
+</html>

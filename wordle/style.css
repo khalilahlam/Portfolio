@@ -1,0 +1,68 @@
+table {
+    border-collapse: collapse; /* hace que las líneas de la tabla no tengan espacio entre ellas */
+    margin-top: 10px;           /* deja 10px de espacio arriba de la tabla */
+    margin-left: auto;           /* centra la tabla horizontalmente */
+    margin-right: auto;          /* centra la tabla horizontalmente */
+}
+
+td {
+    padding: 1px;               /* espacio dentro de cada celda entre borde y contenido */
+    text-align: center;         /* el texto/número dentro de la celda se pone en el centro */
+}
+
+body {
+    background-color: hsl(199, 68%, 81%);  /* color de fondo de la página (celeste claro) */
+    font-family: sans-serif;               /* tipo de letra sin adornos */
+    display: flex;                         /* activa el sistema flexible para alinear elementos */
+    flex-direction: column;                /* los elementos se colocan uno debajo de otro (vertical) */
+    align-items: center;                   /* centra todo horizontalmente */
+    padding: 20px;                         /* deja 20px de espacio entre el borde de la pantalla y el contenido */
+}
+
+.titulo {
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;                   
+    color: #04160e;                        
+}
+
+input[type="text"] {
+    width: 50px;          
+    height: 50px;         
+    font-size: 25px;      /* tamaño del número dentro de la caja */
+    text-align: center;   /* número centrado dentro de la caja */
+    border: 2px solid #333; 
+    border-radius: 10px;  /* bordes redondeados */
+    margin: 2px;          /* espacio entre las cajas */
+}
+
+button {
+    width: 70px;          /* ancho de cada botón */
+    height: 50px;         /* alto de cada botón */
+    font-size: 12px;      /* tamaño del texto del botón */
+    border: 2px solid #333; /* borde gris oscuro */
+    border-radius: 20px;  /* bordes muy redondeados  */
+    margin: 5px;          /* espacio entre botones */
+    background-color: #4b6be0; 
+    color: white;        
+    cursor: pointer;      
+}
+
+button:hover {
+    background-color: #78bbfb;
+}
+
+button:focus {
+    border: 2px solid white;  
+}
+
+.acertado {
+    background-color: rgb(150, 225, 150); 
+}
+
+.casi {
+    background-color: rgb(244, 244, 128); 
+}
+
+.incorrecto {
+    background-color: rgb(249, 145, 145); 
+}

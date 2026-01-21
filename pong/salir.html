@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Salir - Pong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: black;
+    color: yellow;
+    font-family: 'Press Start 2P', monospace;
+    text-align: center;
+    padding-top: 100px;
+  }
+  h2 {
+    font-size: 24px;
+  }
+  button {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    background-color: #f700ff;
+    color: yellow;
+    border-radius: 10px;
+    border: 2px solid yellow;
+  }
+  button:hover {
+    background-color: yellow;
+    color: #f700ff;
+    transition: 0.3s;
+  }
+</style>
+</head>
+<body>
+
+<h2>¡Hasta luego!</h2>
+<p>Gracias por jugar al Pong.</p>
+<button id="volver">Volver al menú</button>
+<audio id="musica" src="pong-pong-193380.mp3" loop></audio>
+<button id="toggleMusic">🔊 Música</button>
+
+<script>
+document.getElementById("volver").onclick = () => {
+    window.location.href = "index.html"; // tu menú principal
+};
+const musica = document.getElementById("musica");
+const btn = document.getElementById("toggleMusic");
+
+// estado guardado
+let musicaActiva = localStorage.getItem("musica") !== "off";
+
+musica.volume = 0.3;
+
+if (musicaActiva) {
+    musica.play().catch(()=>{});
+    btn.textContent = "🔊 Música";
+} else {
+    btn.textContent = "🔇 Música";
+}
+
+// botón música
+btn.onclick = () => {
+    if (musica.paused) {
+        musica.play();
+        localStorage.setItem("musica", "on");
+        btn.textContent = "🔊 Música";
+    } else {
+        musica.pause();
+        localStorage.setItem("musica", "off");
+        btn.textContent = "🔇 Música";
+    }
+};
+
+// activar música en primer clic del usuario (requerido por navegador)
+document.addEventListener("click", () => {
+    if (localStorage.getItem("musica") !== "off") {
+        musica.play().catch(()=>{});
+    }
+}, { once: true });
+</script>
+
+</body>
+</html>

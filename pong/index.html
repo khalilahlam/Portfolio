@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego del pong</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+body {
+    overflow: hidden;
+    background-color: black;
+    text-align: center;
+}
+
+h2 {
+    font-family: 'Press Start 2P';
+    color: #f700ff;
+}
+
+h3 {
+    font-family: 'Press Start 2P';
+    color: yellow;
+}
+
+#menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* BOTONES */
+#menu div {
+    width: 250px;
+    height: 50px;
+    background-color: #f700ff;
+    border: 2px solid yellow;
+    border-radius: 10px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P';
+    cursor: pointer;
+    color: yellow;
+}
+
+#menu div:hover {
+    background-color: yellow;
+    color: #f700ff;
+    transition: 0.3s;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Bienvenido al juego del pong...</h2>
+<h3>¿Estás listo?</h3>
+
+<audio id="musica" src="pong-pong-193380.mp3" loop></audio>
+
+<div id="menu">
+    <div id="jugar">Jugar</div>
+    <div id="opciones">Opciones</div>
+    <div id="toggleMusic">🔊 Música</div>
+    <div id="salir">Salir</div>
+</div>
+
+<script>
+  
+document.getElementById("jugar").onclick = () => {
+    window.location.href = "pong.html";
+};
+document.getElementById("opciones").onclick = () => {
+    window.location.href = "opciones.html";
+};
+document.getElementById("salir").onclick = () => {
+    window.location.href = "salir.html";
+};
+
+// música
+const musica = document.getElementById("musica");
+const btn = document.getElementById("toggleMusic");
+
+musica.volume = 0.3;
+
+// estado guardado
+if (localStorage.getItem("musica") === "off") {
+    btn.textContent = "🔇 Música";
+} else {
+    btn.textContent = "🔊 Música";
+}
+
+// activar música en primer clic permitido
+document.addEventListener("click", () => {
+    if (localStorage.getItem("musica") !== "off") {
+        musica.play().catch(()=>{});
+    }
+}, { once: true });
+
+// botón música
+btn.onclick = () => {
+    if (musica.paused) {
+        musica.play();
+        localStorage.setItem("musica", "on");
+        btn.textContent = "🔊 Música";
+    } else {
+        musica.pause();
+        localStorage.setItem("musica", "off");
+        btn.textContent = "🔇 Música";
+    }
+};
+</script>
+
+</body>
+</html>
